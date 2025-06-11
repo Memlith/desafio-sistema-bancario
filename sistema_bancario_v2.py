@@ -166,3 +166,57 @@ class Saque(Transacao):
     def registrar(self, conta):
         if conta.sacar(self.valor):
             conta.historico.adicionar_transacao(self)
+
+
+def menu():
+    menu = f"""{"MENU".center(32, "=")}
+[d] Depositar
+[s] Sacar
+[e] Extrato
+[nc] Nova conta
+[lc] Listar contas
+[nu] Novo usuario
+[q] Sair
+=> """
+    return input(menu)
+
+
+def filtrar_cliente(cpf, clientes):
+    filtra_cliente = [cliente for cliente in clientes if cliente.cpf == cpf]
+    return filtrar_cliente[0] if filtra_cliente else None
+
+
+def recupera_conta_cliente(cliente):
+    if not cliente.contas:
+        print("Cliente nao cadastrado!")
+        return
+    valor = float(input("Informe o valor de deposito: "))
+    transacao = Deposito(valor)
+
+    conta = recupera_conta_cliente(cliente)
+
+
+def main():
+    clientes = []
+    contas = []
+
+    while True:
+        opcao = menu()
+
+        if opcao == "d":
+            depositar(clientes)
+        elif opcao == "s":
+            sacar(clientes)
+        elif opcao == "e":
+            extrato(clientes)
+        elif opcao == "nc":
+            numero_conta = len(contas) + 1
+            criar_conta(numero_conta, clientes, contas)
+        elif opcao == "lc":
+            listar_contas(contas)
+        elif opcao == "nu":
+            criar_cliente(clientes)
+        elif opcao == "q":
+            break
+        else:
+            print("Opcao invalida, tente novamente!")
